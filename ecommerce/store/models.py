@@ -23,6 +23,14 @@ class Product(models.Model):
     def __str__(self):
         return self.name
 
+    # @property
+    # def imageURL(self):
+    #     try:
+    #         lin: self.image.url
+    #     except:
+    #         lin: ''
+    #     return lin
+
 
 class Order(models.Model):
     customer = models.ForeignKey(
