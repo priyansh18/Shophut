@@ -83,6 +83,7 @@
     <br />
     <div class="box-element hidden" id="payment-info">
       <small>Paypal Options</small>
+      <button id="make-payment" class="btn btn-warning">Make Payment</button>
     </div>
   </div>
 
@@ -123,5 +124,13 @@
     document.getElementById('form-button').classList.add('hidden');
     document.getElementById('payment-info').classList.remove('hidden');
   });
+  document
+    .getElementById('make-payment')
+    .addEventListener('click', function (e) {
+      submitFormData();
+    });
+  function submitFormData() {
+    console.log('submit');
+  }
 </script>
 {% endblock content %}
