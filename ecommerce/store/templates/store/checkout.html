@@ -101,7 +101,9 @@
           <img class="row-image" src="{{item.product.image.url}}" />
         </div>
         <div style="flex: 2;"><p>{{item.product.name}}</p></div>
-        <div style="flex: 1;"><p>Rs.{{item.product.price}}</p></div>
+        <div style="flex: 1;">
+          <p>Rs.{{item.product.price}}</p>
+        </div>
         <div style="flex: 1;"><p>x{{item.quantity}}</p></div>
       </div>
       {% endfor %}
@@ -112,7 +114,7 @@
 </div>
 <script type="text/javascript">
   var shipping = '{{order.shipping}}';
-  var total = '{{get_cart_items}}';
+  var total = '{{order.get_cart_items}}';
 
   if (shipping == 'False') {
     document.getElementById('shipping-info').innerHTML = '';
@@ -140,7 +142,6 @@
       submitFormData();
     });
   function submitFormData() {
-
     var userFormData = {
       name: null,
       email: null,
@@ -177,7 +178,7 @@
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log({'Success':data});
+        console.log({ Success: data });
         alert('Transaction Completed');
         window.location.href = "{% url 'store'%}";
       });
