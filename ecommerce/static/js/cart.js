@@ -8,11 +8,35 @@ for (var i = 0; i < updateBtns.length; i++) {
 
     console.log('User', user);
     if (user == 'AnonymousUser') {
-      console.log('Not Logged In');
+      addCookieItem(productId, action);
     } else {
       updateUserOrder(productId, action);
     }
   });
+}
+
+function addCookieItem(productId, action) {
+  console.log('Not Logged In.....');
+
+  if (action == 'add') {
+    console.log('erwesrwer', cart);
+    if (cart[productId] == undefined) {
+      console.log('WFEASR', cart[productId]);
+      cart[productId] = { quantity: 1 };
+    } else {
+      cart[productId]['quantity'] += 1;
+    }
+  }
+  if (action == 'remove') {
+    cart[productId]['quantity'] -= 1;
+
+    if (cart[productId]['quantity'] <= 0) {
+      delete cart[productId];
+    }
+  }
+  console.log('Carty', cart);
+  document.cookie = 'cart=' + JSON.stringify(cart) + ';domain=;path=/';
+  location.reload();
 }
 
 function updateUserOrder(productId, action) {
