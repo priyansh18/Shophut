@@ -36,14 +36,21 @@ def cart(request):
         try:
             cart = json.loads(request.COOKIES['cart'])
         except:
-            cart={}    
-        print('Cart',cart)
-        items= []
+            cart = {}
+        print('Cart', cart)
+        items = []
         order = {'get_cart_total': 0, 'get_cart_items': 0}
         cartItems = order['get_cart_total']
 
         for i in cart:
-            cartItems+=cart[i]['quantity ']
+            cartItems += cart[i]['quantity']
+
+            product = Product.objects.get(id=i)
+            total = (product.price*cart[i]['quantity'])
+
+            order['get_cart_items'] += total
+            order['get_cart_total'] += cart[i]['quantity']
+
     context = {'items': items, 'order': order,
                'cartItems': cartItems, 'shipping': False}
     return render(request, 'store/cart.html', context)
