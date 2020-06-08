@@ -17,12 +17,11 @@ def store(request):
         items = order.orderitem_set.all()
         cartItems = order.get_cart_total
     else:
-        items: []
-        order = {'get_cart_total': 0, 'get_cart_total': 0}
-        cartItems = order['get_cart_total']
+        cookieData = cookieCart(request)
+        cartItems = cookieData['cartItems']
 
     products = Product.objects.all()
-    context = {'products': products, 'cartItems': cartItems, 'shipping': False}
+    context = {'products': products,'cartItems': cartItems, 'shipping': False}
     return render(request, 'store/store.html', context)
 
 
@@ -34,10 +33,12 @@ def cart(request):
         items = order.orderitem_set.all()
         cartItems = order.get_cart_total
     else:
-        
+        cookieData = cookieCart(request)
+        cartItems = cookieData['cartItems']
+        order = cookieData['order']
+        items = cookieData['items']
 
-    context = {'items': items, 'order': order,
-               'cartItems': cartItems, 'shipping': False}
+    context = {'items': items, 'order': order,'cartItems': cartItems, 'shipping': False}
     return render(request, 'store/cart.html', context)
 
 
@@ -48,10 +49,12 @@ def checkout(request):
             customer=customer, complete=False)
         items = order.orderitem_set.all()
     else:
-        items: []
-        order = {'get_cart_total': 0, 'get_cart_items': 0}
+        cookieData = cookieCart(request)
+        cartItems = cookieData['cartItems']
+        order = cookieData['order']
+        items = cookieData['items']
 
-    context = {'items': items, 'order': order, 'shipping': False}
+    context = {'items': items, 'order': order,'cartItems':cartItems, 'shipping': False}
     return render(request, 'store/checkout.html', context)
 
 
