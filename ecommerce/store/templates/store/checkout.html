@@ -114,9 +114,11 @@
   </div>
 </div>
 
-<script src="https://www.paypal.com/sdk/js?client-id=AeS2zQ-NI8QWv-jtmXfoPvhQITW20P1Z1GrFcooG5MqGk1cU64q1XbSmyCoLhNjPd3CB8VWCOdzL8yQJ&currency=INR"></script>
+<script src="https://www.paypal.com/sdk/js?client-id=AdrgzkL1uatWu9OJm3E-OIXwTjZl9FJZvTtgot7Q1dyVPapdLIZrfqXm9Vuo63FpDRs0UiXN1EaG4qCd&currency=INR"></script>
 
 <script>
+  var total = '{{order.get_cart_items}}';
+
   // Render the PayPal button into #paypal-button-container
   paypal
     .Buttons({
@@ -126,7 +128,7 @@
           purchase_units: [
             {
               amount: {
-                value: '0.01',
+                value: total,
               },
             },
           ],
@@ -136,10 +138,7 @@
       // Finalize the transaction
       onApprove: function (data, actions) {
         return actions.order.capture().then(function (details) {
-          // Show a success message to the buyer
-          alert(
-            'Transaction completed by ' + details.payer.name.given_name + '!'
-          );
+          submitFormData();
         });
       },
     })
@@ -147,7 +146,6 @@
 </script>
 <script type="text/javascript">
   var shipping = '{{order.shipping}}';
-  var total = '{{order.get_cart_items}}';
 
   if (shipping == 'False') {
     document.getElementById('shipping-info').innerHTML = '';
