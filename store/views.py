@@ -4,6 +4,7 @@ from .models import *
 import json
 import datetime
 from .utils import cartData, cookieCart,guestOrder
+from .models import Product
 
 # Create your views here.
 
