@@ -10,10 +10,8 @@ from .models import Product
 
 
 def store(request):
-
     data = cartData(request)
     cartItems = data['cartItems']
-
     products = Product.objects.all()
     context = {'products': products, 'cartItems': cartItems, 'shipping': False}
     return render(request, 'store/store.html', context)
