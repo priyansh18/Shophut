@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 
 from pathlib import Path
 import json
+from decouple import config
 import os
 from django.core.exceptions import ImproperlyConfigured
 import mimetypes
@@ -20,27 +21,16 @@ mimetypes.add_type("text/css", ".css", True)
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-with open(os.path.join(BASE_DIR, 'secrets.json')) as secrets_file:
-    secrets = json.load(secrets_file)
-
-def get_secret(setting, secrets=secrets):
-    """Get secret setting or fail with ImproperlyConfigured"""
-    try:
-        return secrets[setting]
-    except KeyError:
-        raise ImproperlyConfigured("Set the {} setting".format(setting))
-
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'z83ft0%m_naj+wty@ul4h0w58)npj&_(l=gf&sdgy6#(wnfi9%'
-
+SECRET_KEY = config('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['shophut.herokuapp.com','127.0.0.1']
+ALLOWED_HOSTS = ['shophut.herokuapp.com', '127.0.0.1']
 
 
 # Application definition
@@ -135,7 +125,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
-STATIC_ROOT = os.path.join(BASE_DIR,'staticfiles')
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static')
@@ -145,10 +135,10 @@ MEDIA_URL = '/images/'
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'static/images')
 
-#S3 BUCKETS CONFIG
+# S3 BUCKETS CONFIG
 
 AWS_QUERYSTRING_AUTH = False
 DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
-AWS_ACCESS_KEY_ID = get_secret('AWS_ACCESS_KEY_ID')
-AWS_SECRET_ACCESS_KEY = get_secret('AWS_SECRET_ACCESS_KEY')
+AWS_ACCESS_KEY_ID = config('AWS_ACCESS_KEY_ID')
+AWS_SECRET_ACCESS_KEY = config('AWS_SECRET_ACCESS_KEY')
 AWS_STORAGE_BUCKET_NAME = 'shophut-bucket'
