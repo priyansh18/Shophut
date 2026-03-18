@@ -1,42 +1,69 @@
-<!DOCTYPE html>
 {% load static %}
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
-    <base href="/">
-  </head>
-  <body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-      <a class="navbar-brand" href="{% url 'store'%}">ShopHut</a>
-      <button
-        class="navbar-toggler"
-        type="button"
-        data-toggle="collapse"
-        data-target="#navbarSupportedContent"
-        aria-controls="navbarSupportedContent"
-        aria-expanded="false"
-        aria-label="Toggle navigation"
-      >
-        <span class="navbar-toggler-icon"></span>
-      </button>
+<header class="site-header">
+  <div class="header-inner">
+    <!-- Logo -->
+    <a class="header-logo" href="{% url 'store' %}">
+      Shop<span>Hut</span>
+    </a>
 
-      <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav mr-auto">
-          <li class="nav-item active">
-            <a class="nav-link" href="{% url 'store' %}"
-              >Store <span class="sr-only">(current)</span></a
-            >
-          </li>
-        </ul>
-        <form class="form-inline my-2 my-lg-0">
-          <a href="{% url 'cart'%}">
-            <img id="cart-icon" src="{% static 'images/cart.png' %}" />
-          </a>
-          <p id="cart-total">{{cartItems}}</p>
-        </form>
-      </div>
+    <!-- Category nav -->
+    <nav class="header-nav">
+      <a href="{% url 'store' %}?category=men" {% if current_category == 'men' %}class="active"{% endif %}>Men</a>
+      <a href="{% url 'store' %}?category=women" {% if current_category == 'women' %}class="active"{% endif %}>Women</a>
+      <a href="{% url 'store' %}?category=kids" {% if current_category == 'kids' %}class="active"{% endif %}>Kids</a>
+      <a href="{% url 'store' %}?category=home" {% if current_category == 'home' %}class="active"{% endif %}>Home &amp; Living</a>
+      <a href="{% url 'store' %}?category=beauty" {% if current_category == 'beauty' %}class="active"{% endif %}>Beauty</a>
     </nav>
-  </body>
-</html>
+
+    <!-- Search -->
+    <div class="header-search">
+      <i class="fas fa-search search-icon"></i>
+      <input type="text" placeholder="Search for products, brands and more" />
+    </div>
+
+    <!-- Actions -->
+    <div class="header-actions">
+      <!-- Profile -->
+      <div class="header-action">
+        <i class="far fa-user"></i>
+        <span>Profile</span>
+        <div class="user-dropdown">
+          {% if request.user.is_authenticated %}
+          <div class="user-dropdown-header">
+            <strong>{{ request.user.username }}</strong>
+            <small>{{ request.user.email }}</small>
+          </div>
+          <a href="#"><i class="fas fa-box"></i>Orders</a>
+          <a href="{% url 'cart' %}"><i class="fas fa-heart"></i>Wishlist</a>
+          <div class="dropdown-divider-custom"></div>
+          <a href="{% url 'logout' %}"><i class="fas fa-sign-out-alt"></i>Logout</a>
+          {% else %}
+          <div class="user-dropdown-guest">
+            <p><strong>Welcome</strong></p>
+            <p>To access account and manage orders</p>
+            <a href="{% url 'login' %}" class="btn-login-dropdown">LOGIN / SIGNUP</a>
+          </div>
+          <div class="dropdown-divider-custom"></div>
+          <a href="#"><i class="fas fa-box"></i>Orders</a>
+          <a href="#"><i class="fas fa-heart"></i>Wishlist</a>
+          {% endif %}
+        </div>
+      </div>
+
+      <!-- Wishlist -->
+      <a class="header-action" href="#">
+        <i class="far fa-heart"></i>
+        <span>Wishlist</span>
+      </a>
+
+      <!-- Bag -->
+      <a class="header-action" href="{% url 'cart' %}">
+        <i class="fas fa-shopping-bag"></i>
+        <span>Bag</span>
+        {% if cartItems and cartItems != 0 %}
+        <div class="action-badge" id="cart-total">{{cartItems}}</div>
+        {% endif %}
+      </a>
+    </div>
+  </div>
+</header>

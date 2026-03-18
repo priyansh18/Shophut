@@ -1,71 +1,81 @@
-{% extends 'store/main.html'%} {% load static %} {% block content %}
+{% extends 'store/main.html' %}
+{% load static %}
+{% block content %}
 
-<div class="row">
-  <div class="col-lg-12">
-    <div class="box-element">
-      <a class="btn btn-outline-dark" href="{% url 'store'%}"
-        >&#x2190; Continue Shopping</a
-      >
-      <br />
-      <br />
+<div class="page-wrapper">
+  <!-- Breadcrumb -->
+  <div class="page-breadcrumb">
+    <a href="{% url 'store' %}">Home</a> / Shopping Bag
+  </div>
 
-      <table class="table">
-        <tr>
-          <th>
-            <h4>Items:<strong> {{order.get_cart_total}}</strong></h4>
-          </th>
-          <th>
-            <h4>Total:<strong> Rs. {{order.get_cart_items}}</strong></h4>
-          </th>
-          <th>
-            <a
-              style="float: right; margin: 4px;"
-              class="btn btn-success"
-              href="{% url 'checkout' %}"
-              >Checkout</a
-            >
-          </th>
-        </tr>
-      </table>
-    </div>
-    <br />
-    <div class="box-element">
-      <div class="cart-row">
-        <div style="flex: 2;"></div>
-        <div style="flex: 2;"><strong>Items</strong></div>
-        <div style="flex: 1;"><strong>Price</strong></div>
-        <div style="flex: 1;"><strong>Quantity</strong></div>
-        <div style="flex: 1;"><strong>Total</strong></div>
-      </div>
+  {% if items %}
+  <div class="page-title">
+    My Bag <small>{{order.get_cart_total}} item(s)</small>
+  </div>
+
+  <div class="cart-layout">
+    <!-- Items -->
+    <div class="cart-items">
       {% for item in items %}
-      <div class="cart-row">
-        <div style="flex: 2;">
-          <img class="row-image" src="{{item.product.image.url}}" />
+      <div class="cart-item">
+        <div class="cart-item-img">
+          <img src="{{item.product.imageURL}}" alt="{{item.product.name}}" />
         </div>
-        <div style="flex: 2;"><p>{{item.product.name}}</p></div>
-        <div style="flex: 1;"><p>Rs.{{item.product.price}}</p></div>
-        <div style="flex: 1;">
-          <p class="quantity">{{item.quantity}}</p>
-          <div class="quantity">
-            <img
-              data-product="{{item.product.id}}"
-              data-action="add"
-              class="chg-quantity update-cart"
-              src="{% static  'images/arrow-up.png' %}"
-            />
-
-            <img
-              data-product="{{item.product.id}}"
-              data-action="remove"
-              class="chg-quantity update-cart"
-              src="{% static  'images/arrow-down.png' %}"
-            />
+        <div class="cart-item-details">
+          <div class="cart-item-brand">{{ item.product.brand|default:"ShopHut" }}</div>
+          <div class="cart-item-name">{{item.product.name}}</div>
+          <div class="cart-item-pricing">
+            <span class="price">Rs. {{item.get_total}}</span>
+            <span class="mrp">Rs. {{item.get_total}}</span>
+            <span class="discount">30% OFF</span>
+          </div>
+          <div class="cart-item-qty">
+            <button class="qty-btn update-cart" data-product="{{item.product.id}}" data-action="remove">
+              <i class="fas fa-minus"></i>
+            </button>
+            <div class="qty-val">{{item.quantity}}</div>
+            <button class="qty-btn update-cart" data-product="{{item.product.id}}" data-action="add">
+              <i class="fas fa-plus"></i>
+            </button>
           </div>
         </div>
-        <div style="flex: 1;"><p>Rs.{{item.get_total}}</p></div>
       </div>
       {% endfor %}
     </div>
+
+    <!-- Price Summary -->
+    <div class="cart-summary">
+      <div class="cart-summary-title">Price Details ({{order.get_cart_total}} Item(s))</div>
+      <div class="cart-summary-row">
+        <span>Total MRP</span>
+        <span>Rs. {{order.get_cart_items}}</span>
+      </div>
+      <div class="cart-summary-row">
+        <span>Discount on MRP</span>
+        <span class="text-green">-Rs. 0</span>
+      </div>
+      <div class="cart-summary-row">
+        <span>Delivery Fee</span>
+        <span class="text-green">FREE</span>
+      </div>
+      <div class="cart-summary-row total">
+        <span>Total Amount</span>
+        <span>Rs. {{order.get_cart_items}}</span>
+      </div>
+      <div class="cart-summary-btn">
+        <a href="{% url 'checkout' %}" class="btn-pink">PLACE ORDER</a>
+      </div>
+    </div>
   </div>
+
+  {% else %}
+  <div class="empty-cart">
+    <i class="fas fa-shopping-bag"></i>
+    <h3>Hey, it feels so light!</h3>
+    <p>There is nothing in your bag. Let's add some items.</p>
+    <a href="{% url 'store' %}" class="btn-outline-pink">ADD ITEMS FROM WISHLIST</a>
+  </div>
+  {% endif %}
 </div>
+
 {% endblock %}

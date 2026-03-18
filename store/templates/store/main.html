@@ -4,14 +4,21 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Ecommerce</title>
-    <link rel="stylesheet" type="text/css" href="{% static 'css/main.css' %}" />
+    <meta name="description" content="ShopHut - Your one-stop fashion destination" />
+    <title>ShopHut | Online Fashion Store</title>
+    <base href="/" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
     <link
       rel="stylesheet"
       href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
       integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk"
       crossorigin="anonymous"
     />
+    <link rel="stylesheet" type="text/css" href="{% static 'css/main.css' %}" />
 
     <script type="text/javascript">
       var user = '{{request.user}}';
@@ -22,11 +29,8 @@
           var cookies = document.cookie.split(';');
           for (var i = 0; i < cookies.length; i++) {
             var cookie = cookies[i].trim();
-            // Does this cookie string begin with the name we want?
             if (cookie.substring(0, name.length + 1) === name + '=') {
-              cookieValue = decodeURIComponent(
-                cookie.substring(name.length + 1)
-              );
+              cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
               break;
             }
           }
@@ -39,7 +43,6 @@
         var cookieArr = document.cookie.split(';');
         for (var i = 0; i < cookieArr.length; i++) {
           var cookiePair = cookieArr[i].split('=');
-
           if (name == cookiePair[0].trim()) {
             return decodeURIComponent(cookiePair[1]);
           }
@@ -47,23 +50,18 @@
         return null;
       }
       var cart = JSON.parse(getCookie('cart'));
-
-      if(cart==undefined){
-        cart={}
-        console.log("Cart was created!")
-        document.cookie="cart="  +JSON.stringify(cart) +";domain=;path=/"
+      if (cart == undefined) {
+        cart = {};
+        document.cookie = 'cart=' + JSON.stringify(cart) + ';domain=;path=/';
       }
-      console.log("Cart:",cart)
-
-
     </script>
   </head>
   <body>
     {% include 'store/navbar.html' %}
 
-    <div class="container">
-      {% block content %} {% endblock %}
-    </div>
+    {% block content %}{% endblock %}
+
+    {% include 'store/footer.html' %}
 
     <script
       src="https://code.jquery.com/jquery-3.5.1.slim.min.js"

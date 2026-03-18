@@ -1,22 +1,90 @@
-{% extends 'store/main.html'%} {% load static %} {% block content %}
-<div class="row">
+{% extends 'store/main.html' %}
+{% load static %}
+{% block content %}
+
+<!-- Hero Banner -->
+<div class="hero-banner">
+  <div class="hero-inner">
+    <div class="hero-text">
+      {% if current_category == 'men' %}
+      <h1>MEN'S<br/>COLLECTION</h1>
+      <p>Explore the latest in men's fashion, footwear &amp; accessories</p>
+      {% elif current_category == 'women' %}
+      <h1>WOMEN'S<br/>COLLECTION</h1>
+      <p>Discover trending styles in dresses, kurtas, heels &amp; more</p>
+      {% elif current_category == 'kids' %}
+      <h1>KIDS'<br/>COLLECTION</h1>
+      <p>Fun, colourful &amp; comfortable outfits for your little ones</p>
+      {% elif current_category == 'home' %}
+      <h1>HOME &amp;<br/>LIVING</h1>
+      <p>Upgrade your space with premium home decor &amp; essentials</p>
+      {% elif current_category == 'beauty' %}
+      <h1>BEAUTY<br/>ESSENTIALS</h1>
+      <p>Top-rated skincare, makeup &amp; fragrances from best brands</p>
+      {% else %}
+      <h1>BIGGEST DEALS<br/>ON TOP BRANDS</h1>
+      <p>Explore the latest trends in fashion, footwear &amp; accessories</p>
+      {% endif %}
+      <a class="hero-cta" href="#products">EXPLORE NOW</a>
+    </div>
+    <div class="hero-stats">
+      <div class="hero-stat">
+        <div class="stat-num">{{ products|length }}+</div>
+        <div class="stat-label">Products</div>
+      </div>
+      <div class="hero-stat">
+        <div class="stat-num">50+</div>
+        <div class="stat-label">Brands</div>
+      </div>
+      <div class="hero-stat">
+        <div class="stat-num">10K+</div>
+        <div class="stat-label">Customers</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Section header -->
+<div class="section-header" id="products">
+  <h2>
+    {% if current_category %}
+    {{ current_category|upper }} — <span>TRENDING NOW</span>
+    {% else %}
+    NEW <span>ARRIVALS</span>
+    {% endif %}
+  </h2>
+  <p>{{ products|length }} items found</p>
+</div>
+
+<!-- Product Grid -->
+<div class="product-grid">
   {% for product in products %}
-  <div class="col-lg-4">
-    <img class="thumbnail" src="{{product.image.url}}" />
-    <div class="box-element product">
-      <h6><strong>{{product.name}}</strong></h6>
-      <hr />
-      <button
-        data-product="{{product.id}}"
-        data-action="add"
-        class="btn btn-outline-warning add-btn update-cart"
-      >
-        Add to Cart
-      </button>
-      <a class="btn btn-outline-success" href="#">View</a>
-      <h4 style="display: inline; float: right;">Rs.{{product.price}}</h4>
+  <div class="product-card">
+    <div class="card-img">
+      <img src="{{product.imageURL}}" alt="{{product.name}}" />
+      {% if product.digital %}
+      <div class="card-badge">Digital</div>
+      {% endif %}
+      <button class="card-wishlist"><i class="far fa-heart"></i></button>
+      <div class="card-add-bag update-cart" data-product="{{product.id}}" data-action="add">
+        <i class="fas fa-shopping-bag"></i> ADD TO BAG
+      </div>
+    </div>
+    <div class="card-info">
+      <div class="card-brand">{{ product.brand|default:"ShopHut" }}</div>
+      <div class="card-name">{{product.name}}</div>
+      <div class="card-pricing">
+        <span class="card-price">Rs. {{product.price|floatformat:0}}</span>
+        <span class="card-mrp">Rs. {{product.price|floatformat:0}}</span>
+        <span class="card-discount">(30% OFF)</span>
+      </div>
+      <div class="card-rating">
+        <i class="fas fa-star"></i> 4.{{product.id|divisibleby:3|yesno:"2,5"}}
+        <span>| {{product.id}}k</span>
+      </div>
     </div>
   </div>
   {% endfor %}
 </div>
+
 {% endblock %}
