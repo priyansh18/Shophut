@@ -3,15 +3,14 @@ Django settings for ecommerce project.
 """
 
 import os
-from decouple import config
 import mimetypes
 
 mimetypes.add_type("text/css", ".css", True)
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-SECRET_KEY = config('SECRET_KEY', default='django-insecure-dev-key-change-in-prod')
-DEBUG = config('DEBUG', default='False', cast=bool)
+SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-dev-key-change-in-prod')
+DEBUG = os.environ.get('DEBUG', 'False').lower() == 'true'
 
 ALLOWED_HOSTS = ['*']
 
