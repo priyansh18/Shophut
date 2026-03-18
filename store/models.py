@@ -15,21 +15,34 @@ class Customer(models.Model):
 
 
 class Product(models.Model):
+    CATEGORY_CHOICES = [
+        ('men', 'Men'),
+        ('women', 'Women'),
+        ('kids', 'Kids'),
+        ('home', 'Home & Living'),
+        ('beauty', 'Beauty'),
+    ]
+
     name = models.CharField(max_length=200, null=True)
+    brand = models.CharField(max_length=200, null=True, blank=True)
     price = models.FloatField()
     digital = models.BooleanField(default=False, null=True, blank=False)
     image = models.ImageField(null=True, blank=True)
+    category = models.CharField(max_length=20, choices=CATEGORY_CHOICES, default='men')
 
     def __str__(self):
         return self.name
 
-    # @property
-    # def imageURL(self):
-    #     try:
-    #         lin: self.image.url
-    #     except:
-    #         lin: ''
-    #     return lin
+    image_url = models.URLField(max_length=500, null=True, blank=True)
+
+    @property
+    def imageURL(self):
+        if self.image_url:
+            return self.image_url
+        try:
+            return self.image.url
+        except:
+            return f'https://picsum.photos/seed/{self.id}/300/400'
 
 
 class Order(models.Model):
