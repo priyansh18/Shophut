@@ -1,0 +1,45 @@
+{% extends 'store/main.html' %}
+{% load static %}
+{% block content %}
+
+<div class="auth-page">
+  <div class="auth-card">
+    <div class="auth-card-header">
+      <h2>Sign Up</h2>
+      <p>Looks like you're new here! Create your account</p>
+    </div>
+    <div class="auth-card-body">
+      {% if messages %}
+      {% for message in messages %}
+      <div class="auth-alert auth-alert-{{ message.tags }}">{{ message }}</div>
+      {% endfor %}
+      {% endif %}
+
+      <form method="POST" action="{% url 'register' %}">
+        {% csrf_token %}
+        <div class="form-field">
+          <label>Username</label>
+          <input type="text" name="username" placeholder="Choose a username" required />
+        </div>
+        <div class="form-field">
+          <label>Email</label>
+          <input type="email" name="email" placeholder="Enter email address" required />
+        </div>
+        <div class="form-field">
+          <label>Password</label>
+          <input type="password" name="password1" placeholder="Create password" required />
+        </div>
+        <div class="form-field">
+          <label>Confirm Password</label>
+          <input type="password" name="password2" placeholder="Confirm password" required />
+        </div>
+        <button type="submit" class="btn-pink">CONTINUE</button>
+      </form>
+    </div>
+    <div class="auth-card-footer">
+      Already have an account? <a href="{% url 'login' %}">Login</a>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

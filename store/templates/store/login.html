@@ -1,0 +1,37 @@
+{% extends 'store/main.html' %}
+{% load static %}
+{% block content %}
+
+<div class="auth-page">
+  <div class="auth-card">
+    <div class="auth-card-header">
+      <h2>Login</h2>
+      <p>Get access to your Orders, Wishlist and Recommendations</p>
+    </div>
+    <div class="auth-card-body">
+      {% if messages %}
+      {% for message in messages %}
+      <div class="auth-alert auth-alert-{{ message.tags }}">{{ message }}</div>
+      {% endfor %}
+      {% endif %}
+
+      <form method="POST" action="{% url 'login' %}">
+        {% csrf_token %}
+        <div class="form-field">
+          <label>Username</label>
+          <input type="text" name="username" placeholder="Enter username" required />
+        </div>
+        <div class="form-field">
+          <label>Password</label>
+          <input type="password" name="password" placeholder="Enter password" required />
+        </div>
+        <button type="submit" class="btn-pink">LOGIN</button>
+      </form>
+    </div>
+    <div class="auth-card-footer">
+      New to ShopHut? <a href="{% url 'register' %}">Create an account</a>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
