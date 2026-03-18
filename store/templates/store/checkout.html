@@ -1,0 +1,195 @@
+{% extends 'store/main.html' %}
+{% load static %}
+{% block content %}
+
+<div class="page-wrapper">
+  <div class="page-breadcrumb">
+    <a href="{% url 'store' %}">Home</a> / <a href="{% url 'cart' %}">Bag</a> / Checkout
+  </div>
+
+  <div class="page-title">Checkout</div>
+
+  <div class="checkout-layout">
+    <!-- Left: Forms -->
+    <div class="checkout-main">
+      <div class="checkout-card" id="form-wrapper">
+        <form id="form">
+          <div id="user-info">
+            <div class="checkout-card-header">
+              <i class="fas fa-user"></i> Contact Details
+            </div>
+            <div class="checkout-card-body">
+              <div class="form-row-custom">
+                <div class="form-field">
+                  <label>Full Name</label>
+                  <input type="text" name="name" placeholder="Enter full name" required />
+                </div>
+                <div class="form-field">
+                  <label>Email</label>
+                  <input type="email" name="email" placeholder="Enter email address" required />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div id="shipping-info">
+            <div class="checkout-card-header">
+              <i class="fas fa-map-marker-alt"></i> Delivery Address
+            </div>
+            <div class="checkout-card-body">
+              <div class="form-field">
+                <label>Address</label>
+                <input type="text" name="address" placeholder="House no., Building, Street, Area" />
+              </div>
+              <div class="form-row-custom">
+                <div class="form-field">
+                  <label>City / Town</label>
+                  <input type="text" name="city" placeholder="City" />
+                </div>
+                <div class="form-field">
+                  <label>State</label>
+                  <input type="text" name="state" placeholder="State" />
+                </div>
+              </div>
+              <div class="form-row-custom">
+                <div class="form-field">
+                  <label>PIN Code</label>
+                  <input type="text" name="zipcode" placeholder="6-digit PIN code" />
+                </div>
+                <div class="form-field">
+                  <label>Country</label>
+                  <input type="text" name="country" placeholder="Country" value="India" />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div style="padding: 0 20px 20px;">
+            <button id="form-button" type="submit" class="btn-pink" style="width: 100%;">
+              CONTINUE TO PAYMENT
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <div class="checkout-card hidden" id="payment-info">
+        <div class="checkout-card-header">
+          <i class="fas fa-credit-card"></i> Payment
+        </div>
+        <div class="checkout-card-body">
+          <div id="paypal-button-container"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right: Order summary -->
+    <div class="cart-summary order-summary-card">
+      <div class="cart-summary-title">
+        Order Summary ({{order.get_cart_total}} Item(s))
+      </div>
+
+      {% for item in items %}
+      <div class="order-item-row">
+        <img src="{{item.product.imageURL}}" alt="{{item.product.name}}" />
+        <div class="order-item-info">
+          <div class="oname">{{item.product.name}}</div>
+          <div class="oqty">Qty: {{item.quantity}}</div>
+        </div>
+        <div class="order-item-price">Rs. {{item.product.price|floatformat:0}}</div>
+      </div>
+      {% endfor %}
+
+      <div class="cart-summary-row">
+        <span>Total MRP</span>
+        <span>Rs. {{order.get_cart_items}}</span>
+      </div>
+      <div class="cart-summary-row">
+        <span>Delivery Fee</span>
+        <span class="text-green">FREE</span>
+      </div>
+      <div class="cart-summary-row total">
+        <span>Total Amount</span>
+        <span>Rs. {{order.get_cart_items}}</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://www.paypal.com/sdk/js?client-id=ATQdUqvGiaxJjBzYI0qvvvfcY-8-TgIztwRHpQ7rB7IvHgJ_IVTYLjnZBMLhU62I6RNKcZuSnKvR0Fmd&currency=INR"></script>
+
+<script>
+  var total = '{{order.get_cart_items}}';
+
+  paypal.Buttons({
+    createOrder: function (data, actions) {
+      return actions.order.create({
+        purchase_units: [{ amount: { value: total } }],
+      });
+    },
+    onApprove: function (data, actions) {
+      return actions.order.capture().then(function (details) {
+        submitFormData();
+      });
+    },
+  }).render('#paypal-button-container');
+</script>
+
+<script type="text/javascript">
+  var shipping = '{{order.shipping}}';
+
+  if (shipping == 'False') {
+    document.getElementById('shipping-info').innerHTML = '';
+  }
+
+  if (user != 'AnonymousUser') {
+    document.getElementById('user-info').innerHTML = '';
+  }
+
+  if (shipping == 'False' && user != 'AnonymousUser') {
+    document.getElementById('form-wrapper').classList.add('hidden');
+    document.getElementById('payment-info').classList.remove('hidden');
+  }
+
+  var form = document.getElementById('form');
+
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    document.getElementById('form-button').classList.add('hidden');
+    document.getElementById('payment-info').classList.remove('hidden');
+  });
+
+  function submitFormData() {
+    var userFormData = { name: null, email: null, total: total };
+    var shippingInfo = { address: null, city: null, state: null, zipcode: null };
+
+    if (shipping != 'False') {
+      shippingInfo.address = form.address.value;
+      shippingInfo.city = form.city.value;
+      shippingInfo.state = form.state.value;
+      shippingInfo.zipcode = form.zipcode.value;
+    }
+
+    if (user == 'AnonymousUser') {
+      userFormData.name = form.name.value;
+      userFormData.email = form.email.value;
+    }
+
+    fetch('/process_order/', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRFToken': csrftoken,
+      },
+      body: JSON.stringify({ form: userFormData, shipping: shippingInfo }),
+    })
+      .then(function (response) { return response.json(); })
+      .then(function (data) {
+        alert('Transaction Completed');
+        cart = {};
+        document.cookie = 'cart=' + JSON.stringify(cart) + ';domain=;path=/';
+        window.location.href = "{% url 'store' %}";
+      });
+  }
+</script>
+
+{% endblock content %}

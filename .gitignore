@@ -1,0 +1,11 @@
+venv/
+env/
+.env
+__pycache__/
+*.pyc
+*.pyo
+db.sqlite3
+staticfiles/
+*.egg-info/
+.vscode/
+.DS_Store
