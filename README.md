@@ -2,7 +2,7 @@
 
 A full-featured e-commerce web application built with Django, featuring a Myntra-inspired UI with category filtering, user authentication, cart management, and PayPal checkout.
 
-**Live:** [https://shophut-priyanshsinghal.vercel.app/](https://shophut-priyanshsinghal.vercel.app/)
+**Live:** [https://shophut.priyanshsinghal.com](https://shophut.priyanshsinghal.com)
 
 ---
 
